@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kitchen Menu</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        .item { margin: 6px 0; padding: 10px; background: #f4f4f4; border-radius: 6px; }
+        .filters { margin-bottom: 20px; }
+        label { font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>Kitchen Menu</h1>
+
+    <form method="get" class="filters">
+
+        <!-- Category Dropdown -->
+        <label>Category:</label>
+        <select name="category">
+            <option value="">All</option>
+            {% for cat in categories %}
+                <option value="{{ cat }}"
+                    {% if cat == selected_category %}selected{% endif %}>
+                    {{ cat }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <!-- Search Input -->
+        <label style="margin-left:20px;">Search:</label>
+        <input type="text" name="search" value="{{ search_query }}" placeholder="Enter name...">
+
+        <button type="submit">Filter</button>
+    </form>
+
+    <h3>Results:</h3>
+
+    {% if results %}
+        {% for item in results %}
+            <div class="item">{{ item.name }} — <strong>{{ item.category }}</strong></div>
+        {% endfor %}
+    {% else %}
+        <p>No items found.</p>
+    {% endif %}
+
+</body>
+</html>
