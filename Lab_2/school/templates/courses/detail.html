@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}{{ course.title }} — Courses{% endblock %}
+
+{% block content %}
+<a href="/courses/" class="back-link">← Back to Courses</a>
+
+<div class="detail-hero" style="background: #2a6dd4;">
+    <div style="display:flex; align-items:center; gap:1.5rem;">
+        {% if course.image %}
+            <img src="{{ course.image.url }}"
+                 style="width:80px;height:80px;border-radius:14px;object-fit:cover;flex-shrink:0;border:3px solid rgba(255,255,255,0.2);">
+        {% else %}
+            <div class="course-logo-placeholder" style="width:80px;height:80px;font-size:1.6rem;">
+                {{ course.code|slice:":2" }}
+            </div>
+        {% endif %}
+        <div>
+            <span style="font-size:0.75rem;letter-spacing:0.1em;opacity:0.6;text-transform:uppercase;">
+                {{ course.code }}
+            </span>
+            <h1>{{ course.title }}</h1>
+            {% if course.description %}
+            <div class="meta" style="margin-top:0.5rem;max-width:500px;line-height:1.5;">
+                {{ course.description }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 2fr; gap:2rem; align-items:start;">
+
+    <!-- Instructor Panel -->
+    <div>
+        <div class="section-title">👩‍🏫 Instructor</div>
+        {% if course.instructors %}
+        <a href="/instructors/{{ course.instructors.id }}/" class="card" style="text-decoration:none;">
+            <div class="card-header">
+                {% if course.instructors.image %}
+                    <img src="{{ course.instructors.image.url }}"
+                         style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+                {% else %}
+                    <div class="avatar">{{ course.instructors.name|first|upper }}</div>
+                {% endif %}
+                <div>
+                    <div class="card-title">{{ course.instructors.name }}</div>
+                    <div class="card-sub">{{ course.instructors.email }}</div>
+                </div>
+            </div>
+            <div style="font-size:0.82rem; color:var(--muted); margin-top:0.5rem;">
+                📞 {{ course.instructors.phone_number }}
+            </div>
+        </a>
+        {% else %}
+        <div class="card" style="text-align:center; color:var(--muted); padding:2rem;">
+            No instructor assigned
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Students Panel -->
+    <div>
+        <div class="section-title">
+            🎓 Enrolled Students
+            <span class="badge green">{{ students|length }}</span>
+        </div>
+
+        {% if students %}
+        <div style="display:flex; flex-direction:column; gap:0.75rem;">
+            {% for student in students %}
+            <a href="/students/{{ student.id }}/" class="card" style="padding:1rem 1.25rem;">
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                    {% if student.image %}
+                        <img src="{{ student.image.url }}"
+                             style="width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+                    {% else %}
+                        <div class="avatar" style="width:40px;height:40px;font-size:0.9rem;background:#d4522a;">
+                            {{ student.name|first|upper }}
+                        </div>
+                    {% endif %}
+                    <div>
+                        <div style="font-weight:600; font-size:0.95rem;">{{ student.name }}</div>
+                        <div style="font-size:0.8rem; color:var(--muted);">{{ student.email }}</div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state" style="padding:2rem;">
+            <div style="font-size:2rem;">📭</div>
+            <p>No students enrolled yet.</p>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

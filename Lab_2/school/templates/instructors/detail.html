@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}{{ instructor.name }} — Instructors{% endblock %}
+
+{% block extra_styles %}
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+}
+.course-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.course-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+}
+{% endblock %}
+
+{% block content %}
+<a href="/instructors/" class="back-link">← Back to Instructors</a>
+
+<div class="detail-hero">
+    <div style="display:flex; align-items:center; gap:1.25rem;">
+        {% if instructor.image %}
+            <img src="{{ instructor.image.url }}"
+                 style="width:72px;height:72px;border-radius:50%;object-fit:cover;flex-shrink:0;border:3px solid rgba(255,255,255,0.2);">
+        {% else %}
+            <div class="avatar" style="width:72px;height:72px;font-size:1.6rem;">
+                {{ instructor.name|first|upper }}
+            </div>
+        {% endif %}
+        <div>
+            <h1>{{ instructor.name }}</h1>
+            <div class="meta">{{ instructor.email }} &nbsp;·&nbsp; {{ instructor.phone_number }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="section-title">
+    📚 Courses Teaching
+    <span class="badge blue">{{ courses|length }}</span>
+</div>
+
+{% if courses %}
+<div class="courses-grid">
+    {% for course in courses %}
+    <a href="/courses/{{ course.id }}/" class="course-card">
+        <div class="card-header">
+            {% if course.image %}
+                <img src="{{ course.image.url }}"
+                     style="width:52px;height:52px;border-radius:10px;object-fit:cover;flex-shrink:0;">
+            {% else %}
+                <div class="course-logo-placeholder">{{ course.code|slice:":2" }}</div>
+            {% endif %}
+            <div>
+                <div class="card-title">{{ course.title }}</div>
+                <div class="card-sub">Code: {{ course.code }}</div>
+            </div>
+        </div>
+        {% if course.description %}
+        <p style="font-size:0.85rem; color:var(--muted); line-height:1.5;">
+            {{ course.description|truncatechars:100 }}
+        </p>
+        {% endif %}
+        <hr class="divider">
+        <div style="font-size:0.8rem; color:var(--muted);">
+            🎓 {{ course.students.count }} student{{ course.students.count|pluralize }} enrolled
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div style="font-size:2.5rem;">📭</div>
+    <p>This instructor has no courses assigned yet.</p>
+</div>
+{% endif %}
+{% endblock %}

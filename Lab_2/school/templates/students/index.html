@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Students — School Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <span class="badge orange">Enrolled</span>
+    <h1>Students</h1>
+    <p>{{ students|length }} student{{ students|length|pluralize }} currently enrolled</p>
+</div>
+
+{% if students %}
+<div class="grid-3">
+    {% for student in students %}
+    <a href="/students/{{ student.id }}/" class="card">
+        <div class="card-header">
+            {% if student.image %}
+                <img src="{{ student.image.url }}"
+                     style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+            {% else %}
+                <div class="avatar" style="background:#d4522a;">{{ student.name|first|upper }}</div>
+            {% endif %}
+            <div>
+                <div class="card-title">{{ student.name }}</div>
+                <div class="card-sub">{{ student.email }}</div>
+            </div>
+        </div>
+        <hr class="divider">
+        <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.5rem;">
+            Enrolled in {{ student.courses.count }} course{{ student.courses.count|pluralize }}
+        </div>
+        <div class="tag-list">
+            {% for course in student.courses.all %}
+            <span class="tag">{{ course.title }}</span>
+            {% empty %}
+            <span class="tag" style="color:var(--muted);">No courses yet</span>
+            {% endfor %}
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div style="font-size:3rem;">🎓</div>
+    <p>No students found.</p>
+</div>
+{% endif %}
+{% endblock %}

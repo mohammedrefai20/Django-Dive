@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Instructors — School Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <span class="badge">Faculty</span>
+    <h1>Instructors</h1>
+    <p>{{ instructors|length }} instructor{{ instructors|length|pluralize }} teaching at this school</p>
+</div>
+
+{% if instructors %}
+<div class="grid-3">
+    {% for instructor in instructors %}
+    <a href="/instructors/{{ instructor.id }}/" class="card">
+        <div class="card-header">
+            {% if instructor.image %}
+                <img src="{{ instructor.image.url }}"
+                     style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+            {% else %}
+                <div class="avatar">{{ instructor.name|first|upper }}</div>
+            {% endif %}
+            <div>
+                <div class="card-title">{{ instructor.name }}</div>
+                <div class="card-sub">{{ instructor.email }}</div>
+            </div>
+        </div>
+        <hr class="divider">
+        <div style="font-size:0.82rem; color:var(--muted);">
+            📞 {{ instructor.phone_number }}
+        </div>
+        <div class="tag-list">
+            {% for course in instructor.courses.all %}
+            <span class="tag">{{ course.title }}</span>
+            {% empty %}
+            <span class="tag" style="color:var(--muted);">No courses yet</span>
+            {% endfor %}
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div style="font-size:3rem;">👩‍🏫</div>
+    <p>No instructors found.</p>
+</div>
+{% endif %}
+{% endblock %}

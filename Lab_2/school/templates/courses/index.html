@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Courses — School Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <span class="badge blue">Catalog</span>
+    <h1>Courses</h1>
+    <p>{{ courses|length }} course{{ courses|length|pluralize }} available</p>
+</div>
+
+{% if courses %}
+<div class="grid-3">
+    {% for course in courses %}
+    <a href="/courses/{{ course.id }}/" class="card">
+        <div class="card-header">
+            {% if course.image %}
+                <img src="{{ course.image.url }}"
+                     style="width:52px;height:52px;border-radius:10px;object-fit:cover;flex-shrink:0;">
+            {% else %}
+                <div class="course-logo-placeholder">{{ course.code|slice:":2" }}</div>
+            {% endif %}
+            <div>
+                <div class="card-title">{{ course.title }}</div>
+                <div class="card-sub">{{ course.code }}</div>
+            </div>
+        </div>
+        {% if course.description %}
+        <p style="font-size:0.85rem; color:var(--muted); margin: 0.5rem 0; line-height:1.5;">
+            {{ course.description|truncatechars:90 }}
+        </p>
+        {% endif %}
+        <hr class="divider">
+        <div style="font-size:0.82rem; color:var(--muted); display:flex; gap:1rem; flex-wrap:wrap;">
+            <span>👩‍🏫 {{ course.instructors.name|default:"No instructor" }}</span>
+            <span>🎓 {{ course.students.count }} student{{ course.students.count|pluralize }}</span>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div style="font-size:3rem;">📚</div>
+    <p>No courses found.</p>
+</div>
+{% endif %}
+{% endblock %}
